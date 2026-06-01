@@ -1,0 +1,28 @@
+{
+  "name": "api-cadastrousuario",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmmanuelBonifacio/API-CadastroUsuario.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmmanuelBonifacio/API-CadastroUsuario/issues"
+  },
+  "homepage": "https://github.com/EmmanuelBonifacio/API-CadastroUsuario#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1"
+  }
+}
