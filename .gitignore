@@ -1,0 +1,16 @@
+# Dependências
+node_modules/
+
+# Compilação TypeScript
+dist/
+
+# Variáveis de ambiente (NUNCA suba isso para o GitHub!)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
