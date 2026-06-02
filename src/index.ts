@@ -1,7 +1,6 @@
-import express from "express";
+const nome: string = "Emmanuel";
 
-const app = express();
-
-app.post("/usuarios", async (requestAnimationFrame, res) => {});
-
-app.listen(8080);
+type Usuario = {
+  id: string;
+  nome: string;
+};
