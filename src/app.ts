@@ -1,9 +1,32 @@
 import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import userRoutes from "./routes/userRoutes";
 
 const app: Application = express();
 
-// Middlewares
+// Segurança  headers HTTP
+app.use(helmet());
+
+// CORS  permite acesso de frontends externos
+app.use(
+  cors({
+    origin: process.env["ALLOWED_ORIGIN"] ?? "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+// Rate limit  máximo 100 requisições por IP a cada 15 minutos
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { erro: "Muitas requisições. Tente novamente em 15 minutos." },
+});
+app.use(limiter);
+
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

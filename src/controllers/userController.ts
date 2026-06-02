@@ -1,15 +1,20 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "../models/User";
 
-// Cadastrar usuário Post
 export const criarUsuario = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   const { nome, email, senha } = req.body;
 
-  const usuarioExiste = await User.findOne({ email });
+  if (!nome || !email || !senha) {
+    res.status(400).json({ erro: "Nome, email e senha são obrigatórios" });
+    return;
+  }
+
+  const usuarioExiste = await User.findOne({ email: email.toLowerCase() });
   if (usuarioExiste) {
     res.status(400).json({ erro: "Email já cadastrado" });
     return;
@@ -31,7 +36,6 @@ export const criarUsuario = async (
   });
 };
 
-// GET Listar todos os usuários
 export const listarUsuarios = async (
   req: Request,
   res: Response,
@@ -40,11 +44,15 @@ export const listarUsuarios = async (
   res.status(200).json(usuarios);
 };
 
-// GET  Buscar usuário por ID
 export const buscarUsuario = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  if (!mongoose.isValidObjectId(req.params["id"])) {
+    res.status(400).json({ erro: "ID inválido" });
+    return;
+  }
+
   const usuario = await User.findById(req.params["id"]).select("-senha");
 
   if (!usuario) {
@@ -55,11 +63,15 @@ export const buscarUsuario = async (
   res.status(200).json(usuario);
 };
 
-// PUT Atualizar usuário
 export const atualizarUsuario = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  if (!mongoose.isValidObjectId(req.params["id"])) {
+    res.status(400).json({ erro: "ID inválido" });
+    return;
+  }
+
   const { nome, email, senha } = req.body;
   const dados: { nome?: string; email?: string; senha?: string } = {};
 
@@ -67,8 +79,14 @@ export const atualizarUsuario = async (
   if (email) dados.email = email;
   if (senha) dados.senha = await bcrypt.hash(senha, 10);
 
+  if (Object.keys(dados).length === 0) {
+    res.status(400).json({ erro: "Nenhum campo para atualizar foi enviado" });
+    return;
+  }
+
   const usuario = await User.findByIdAndUpdate(req.params["id"], dados, {
     new: true,
+    runValidators: true,
   }).select("-senha");
 
   if (!usuario) {
@@ -79,11 +97,15 @@ export const atualizarUsuario = async (
   res.status(200).json(usuario);
 };
 
-// DELETE Deletar usuário
 export const deletarUsuario = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  if (!mongoose.isValidObjectId(req.params["id"])) {
+    res.status(400).json({ erro: "ID inválido" });
+    return;
+  }
+
   const usuario = await User.findByIdAndDelete(req.params["id"]);
 
   if (!usuario) {

@@ -20,6 +20,7 @@ const userSchema = new Schema<IUser>({
     unique: true,
     lowercase: true,
     trim: true,
+    match: [/^\S+@\S+\.\S+$/, "Formato de email inválido"],
   },
   senha: {
     type: String,
